@@ -1,10 +1,24 @@
-## About
-
 Firebase perfers to communicate over WebSockets for a fast, realtime communication. Every message will be a JSON object, and all messages must have a `"t"` and `"d"` key, for 'message type' and 'data' respectivly.
 
 (Note that there is also a REST API, but it has limited functionality)
 
 The "client library" refers to the [firebase-js-sdk](https://github.com/firebase/firebase-js-sdk)
+
+# Client to Server
+
+*TODO*
+
+# Server to Client
+
+## Keep alive
+
+Periodic message to keep the websocket connection active
+
+`"0"`
+
+Yes, literally just the string "0"
+
+The client sends this after 45 seconds of inactivity. See the implementation in [WebSocketConnection.ts](https://github.com/firebase/firebase-js-sdk/blob/master/packages/database/src/realtime/WebSocketConnection.ts#L399-L408)
 
 ## Database Messages
 
