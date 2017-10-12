@@ -93,7 +93,7 @@ See the handler in [PersistentConnection.ts](https://github.com/firebase/firebas
 }
 ```
 
-It appears that this is a data overrite (as opposed to a merge).
+It appears that this gives *all* the data for the specified path
 
 See the handler in [PersistentConnection.ts](https://github.com/firebase/firebase-js-sdk/blob/master/packages/database/src/core/PersistentConnection.ts#L602-L608)
 
@@ -112,7 +112,7 @@ See the handler in [PersistentConnection.ts](https://github.com/firebase/firebas
 }
 ```
 
-It looks like the [Firebase server emulator](https://github.com/urish/firebase-server/blob/master/index.js) never sends this message. But the client handles it as a 'merge'. See the handler in [PersistentConnection.ts](https://github.com/firebase/firebase-js-sdk/blob/master/packages/database/src/core/PersistentConnection.ts#L609-L615)
+Used to send partial data, when only a small amount has changed. It should be merged with the clients existing cache. Appears to be only sent for `.on` listeners, and never as the first message. See the handler in [PersistentConnection.ts](https://github.com/firebase/firebase-js-sdk/blob/master/packages/database/src/core/PersistentConnection.ts#L609-L615)
 
 #### Listen Revoked
 
