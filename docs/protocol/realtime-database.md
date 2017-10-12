@@ -24,7 +24,7 @@ Messages about the database, eg updates
 
 A response from the server (responding to a message from the client, presumably ourselves). The request number indicates which request is being responded to.
 
-See handler in [PersistentConnection.ts](https://github.com/firebase/firebase-js-sdk/blob/master/packages/database/src/core/PersistentConnection.ts#L592-L593)
+See the handler in [PersistentConnection.ts](https://github.com/firebase/firebase-js-sdk/blob/master/packages/database/src/core/PersistentConnection.ts#L583-L591)
 
 ### Data Push
 
@@ -129,8 +129,7 @@ Probably not used much, if at all. It logs directly to the console, but I've nev
   }
 }
 ```
-
-See the handler in [PersistentConnection.ts](https://github.com/firebase/firebase-js-sdk/blob/master/packages/database/src/core/PersistentConnection.ts#L583-L591)
+See the handler in [PersistentConnection.ts](https://github.com/firebase/firebase-js-sdk/blob/master/packages/database/src/core/PersistentConnection.ts#L592-L593)
 
 ## Control Messages
 
