@@ -197,7 +197,7 @@ Messages related to the connection, server, or client
   }
 }
 ```
-It appears that the host (`h`) is some kind of long-term connection that the client library is instructed to use. Once the handshake is recieved, the client connects to the new host (also using a websocket) and stores the host in localStorage to use for future connections.
+It appears that the host (`h`) is some kind of long-term connection that the client library is instructed to use. Once the handshake is recieved, the client stores the host in localStorage to use for future connections but continues using the default database URL.
 
 See the handler in [Connection.ts](https://github.com/firebase/firebase-js-sdk/blob/31d0f8dce31d73b4419459548b1b9081a3d9dbed/packages/database/src/realtime/Connection.ts#L368-L389)
 
@@ -229,7 +229,7 @@ See the handler in [Connection.ts](https://github.com/firebase/firebase-js-sdk/b
 }
 ```
 
-This inidicates a websocket connection should close. The client library automatically switches to the second "host" websocket if possible.
+This inidicates a websocket connection should close. The client library automatically switches to the second "host" if possible.
 
 See the handler in [Connection.ts](https://github.com/firebase/firebase-js-sdk/blob/31d0f8dce31d73b4419459548b1b9081a3d9dbed/packages/database/src/realtime/Connection.ts#L336-L343)
 
@@ -255,7 +255,7 @@ See the handler in [Connection.ts](https://github.com/firebase/firebase-js-sdk/b
 {
   t: 'c',
   d: {
-    t: 'e', // r for error
+    t: 'e', // e for error
     d: string // I assume it's a string, it's not clear from the client library
   }
 }
@@ -274,3 +274,5 @@ See handler in [Connection.ts](https://github.com/firebase/firebase-js-sdk/blob/
   }
 }
 ```
+
+Used by the client to know that the server is able to respond. Several PING's and PONG's will be echanged when the connection is opened so that the client knows the connection is healthy.
