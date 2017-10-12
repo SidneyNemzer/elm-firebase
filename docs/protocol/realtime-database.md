@@ -93,7 +93,7 @@ See the handler in [PersistentConnection.ts](https://github.com/firebase/firebas
 }
 ```
 
-It appears that this gives *all* the data for the specified path
+This is used as the first message after a 'listen' request, to create the client's cache.
 
 See the handler in [PersistentConnection.ts](https://github.com/firebase/firebase-js-sdk/blob/master/packages/database/src/core/PersistentConnection.ts#L602-L608)
 
