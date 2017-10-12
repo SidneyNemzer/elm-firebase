@@ -30,19 +30,94 @@ See handler in [PersistentConnection.ts](https://github.com/firebase/firebase-js
 
 These indicate data modification
 
+See the handler in [PersistentConnection.ts](https://github.com/firebase/firebase-js-sdk/blob/master/packages/database/src/core/PersistentConnection.ts#L600-L630)
+
+#### Push Data
+
 ```javascript
 {
-  t: 'd', // d for database
+  t: 'd',
   d: {
-    a: string // action
-    b: { // body
-      // TODO
+    a: 'd', 
+    b: {
+      p: string, // path
+      d: object | string | number | null(?) // any valid firebase value
     }
   }
 }
 ```
 
-See the handler in [PersistentConnection.ts](https://github.com/firebase/firebase-js-sdk/blob/master/packages/database/src/core/PersistentConnection.ts#L600-L630)
+It appears that this is a data overrite (as opposed to a merge).
+
+See the handler in [PersistentConnection.ts](https://github.com/firebase/firebase-js-sdk/blob/master/packages/database/src/core/PersistentConnection.ts#L602-L608)
+
+#### Merge Data
+
+```javascript
+{
+  t: 'd',
+  d: {
+    a: 'm', 
+    b: {
+      p: string, // path
+      d: object | string | number | null(?) // any valid firebase value
+    }
+  }
+}
+```
+
+It looks like the [Firebase server emulator](https://github.com/urish/firebase-server/blob/master/index.js) never sends this message. But the client handles it as a 'merge'. See the handler in [PersistentConnection.ts](https://github.com/firebase/firebase-js-sdk/blob/master/packages/database/src/core/PersistentConnection.ts#L609-L615)
+
+#### Listen Revoked
+
+```javascript
+{
+  t: 'd',
+  d: {
+    a: 'c', 
+    b: {
+      p: string, // path
+      q: ? // query
+    }
+  }
+}
+```
+
+The client treats it as a "permission_denied" error. See the handler in [PersistentConnection.ts](https://github.com/firebase/firebase-js-sdk/blob/master/packages/database/src/core/PersistentConnection.ts#L616-L617)
+
+#### Auth Revoked
+
+```javascript
+{
+  t: 'd',
+  d: {
+    a: 'ac', 
+    b: {
+      s: string, // status code
+      d: string // explaination
+    }
+  }
+}
+```
+
+Indicates that the auth token has expired. See the handler in [PersistentConnection.ts](https://github.com/firebase/firebase-js-sdk/blob/master/packages/database/src/core/PersistentConnection.ts#L913-L932)
+
+#### Security Debug
+
+```javascript
+{
+  t: 'd',
+  d: {
+    a: 'sd', 
+    b: {
+      msg: string
+    }
+  }
+}
+```
+
+Probably not used much, if at all. It logs directly to the console, but I've never seen this type of message from Firebase. See the handler in [PersistentConnection.ts](https://github.com/firebase/firebase-js-sdk/blob/master/packages/database/src/core/PersistentConnection.ts#L934-L942)
+
 
 ### Error
 
