@@ -61,7 +61,7 @@ Client's response:
 
 The JavaScript SDK library always sends this as its first message. The client won't create the WebSocket connection until a write or read is requested locally; the operation is queued while connecting, then that message will be sent right after the "client hello".
 
-The client info for the JS SDK looks like this: `sdk.js.4-1-3`. `js` is the client (would be set to `admin_node` or `node`), `sdk` is just 'software development kit' (may be accompanined by `framework.cordova: 1` or `framework.reactnative: 1`. The numbers are just the sdk version (with periods replaced with dashes). This info is constructed by the JS SDK in [PersistentConnection.ts](https://github.com/firebase/firebase-js-sdk/blob/master/packages/database/src/core/PersistentConnection.ts#L971-L995).
+The client info for the JS SDK looks like this: `sdk.js.4-1-3`. This info is constructed by the JS SDK in [PersistentConnection.ts](https://github.com/firebase/firebase-js-sdk/blob/master/packages/database/src/core/PersistentConnection.ts#L971-L995).
 
 
 # Database Interactions
