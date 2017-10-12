@@ -10,14 +10,14 @@ The "client library" refers to the [firebase-js-sdk](https://github.com/firebase
 
 Messages about the database, eg updates
 
-### "response"
+### Response
 
 ```javascript
 {
   t: 'd', // d for database
   d: {
     r: number, // request number
-    b: ? // body
+    b: ? // Specific to each response
   }
 }
 ```
@@ -25,6 +25,40 @@ Messages about the database, eg updates
 A response from the server (responding to a message from the client, presumably ourselves). The request number indicates which request is being responded to.
 
 See the handler in [PersistentConnection.ts](https://github.com/firebase/firebase-js-sdk/blob/master/packages/database/src/core/PersistentConnection.ts#L583-L591)
+
+#### Response: Permission Denied
+
+```javascript
+{
+  t: 'd', // d for database
+  d: {
+    r: number, // request number
+    b: {
+      s: 'permission_denied',
+      d: 'Permission denied' // Appears to be the human-readable error
+    }
+  }
+}
+```
+
+The client library logs the error and removes the listener for the path. See the handler in [PersistentConnection.ts](https://github.com/firebase/firebase-js-sdk/blob/master/packages/database/src/core/PersistentConnection.ts#L252-L273)
+
+#### Response: Ok
+
+```javascript
+{
+  t: 'd', // d for database
+  d: {
+    r: number, // request number
+    b: {
+      s: 'ok',
+      d: {} // Seems to always be an empty object
+    }
+  }
+}
+```
+
+This is the opposite of the "Permission Denied" response. See the handler in [PersistentConnection.ts](https://github.com/firebase/firebase-js-sdk/blob/master/packages/database/src/core/PersistentConnection.ts#L252-L273)
 
 ### Data Push
 
