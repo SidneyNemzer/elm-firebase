@@ -2,13 +2,9 @@ This file documents the Firebase Realtime WebSocket Protocol. In this file, the 
 
 Firebase perfers to communicate over WebSockets for a fast, realtime communication. The Realtime-database also has a [REST API](https://firebase.google.com/docs/reference/rest/database/), but it has limited functionality compared to the WebSocket protocol. 
 
-Every message will be a JSON object, and all messages must have a `"t"` and `"d"` key, for 'message type' and 'data' respectively. (With one exception; the [Keep alive](#keep-alive) message)
+Every message will be a JSON object, and all messages must have a `"t"` and `"d"` key, for 'message type' and 'data' respectively. (There's one exception: the [Keep alive](#keep-alive) message).
 
 # Client to Server
-
-*TODO*
-
-# Server to Client
 
 ## Keep alive
 
@@ -19,6 +15,8 @@ Periodic message to keep the websocket connection active
 Yes, literally just the string "0"
 
 The client sends this after 45 seconds of inactivity. See the implementation in [WebSocketConnection.ts](https://github.com/firebase/firebase-js-sdk/blob/master/packages/database/src/realtime/WebSocketConnection.ts#L399-L408)
+
+# Server to Client
 
 ## Database Messages
 
