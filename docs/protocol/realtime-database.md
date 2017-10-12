@@ -2,7 +2,7 @@ This file documents the Firebase Realtime WebSocket Protocol. In this file, the 
 
 Firebase perfers to communicate over WebSockets for a fast, realtime communication. The Realtime-database also has a [REST API](https://firebase.google.com/docs/reference/rest/database/), but it has limited functionality compared to the WebSocket protocol. 
 
-Every message will be a JSON object, and all messages must have a `"t"` and `"d"` key, for 'message type' and 'data' respectivly. (With one exception; the [Keep alive](#keep-alive) message)
+Every message will be a JSON object, and all messages must have a `"t"` and `"d"` key, for 'message type' and 'data' respectively. (With one exception; the [Keep alive](#keep-alive) message)
 
 # Client to Server
 
