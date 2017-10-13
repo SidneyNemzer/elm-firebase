@@ -70,7 +70,7 @@ The client info for the JS SDK looks like this: `sdk.js.4-1-3`. This info is con
 
 This will overrite existing data
 
-#### Request:
+#### Client Message:
 
 ```javascript
 {
@@ -106,7 +106,7 @@ This will overrite existing data
 
 ### Listen for changes
 
-#### Request:
+#### Client Message:
 
 ```javascript
 {
@@ -124,7 +124,7 @@ This will overrite existing data
 
 #### Good Response:
 
-Confirms request:
+Note that the actual data is sent separatly, see the Data section
 
 ```javascript
 {
@@ -140,40 +140,9 @@ Confirms request:
 }
 ```
 
-Sends data:
+### Stop Listening for changes
 
-```javascript
-{
-  t: 'd'
-  d: {
-    a: 'd', // action = push data; client should re-create local cache
-    b: { // body
-      p: string // path
-      d: object | string | number | null // data
-    }
-  }
-}
-```
-
-### Once
-
-#### Request:
-
-```javascript
-{
-  t: 'd'
-  d: {
-    r: number, // Must be set to a unique request number
-    a: 'p', // action = put
-    b: { // body
-      p: string, // path
-      d: object | string | number // data
-    }
-  }
-}
-```
-
-Send this right after the server has responded with the data:
+#### Client Message:
 
 ```javascript
 {
@@ -190,13 +159,11 @@ Send this right after the server has responded with the data:
 
 #### Good Response:
 
-Confirms the listen request:
-
 ```javascript
 {
   t: 'd'
   d: {
-    r: number, // Same listen request number
+    r: number, // Same request number
     a: 'p', // action = put
     b: { // body
       s: 'ok', // status = ok
@@ -206,13 +173,19 @@ Confirms the listen request:
 }
 ```
 
-Sends data:
+### Data
+
+> **Important**: These messages will be sent by the server without being requested (assuming the client has already sent a 'listen' message for the path)
+
+"Push" messages are used when the client first begins listening to a path. Any updates to the data will be "Merge" messages, to reduce the required bandwidth.
+
+Push:
 
 ```javascript
 {
   t: 'd'
   d: {
-    a: 'd', // action = push data; client should re-create local cache
+    a: 'd', // action = push; client should re-create local cache
     b: { // body
       p: string // path
       d: object | string | number | null // data
@@ -221,17 +194,16 @@ Sends data:
 }
 ```
 
-Confirms the stop listening request:
+Merge:
 
 ```javascript
 {
   t: 'd'
   d: {
-    r: number, // Same stop listen request number
-    a: 'p', // action = put
+    a: 'm', // action = merge; client should update the local cache
     b: { // body
-      s: 'ok', // status = ok
-      d: "" // seems to always be an empty string
+      p: string // path
+      d: object | string | number | null // data
     }
   }
 }
@@ -239,7 +211,7 @@ Confirms the stop listening request:
 
 ## Update data
 
-#### Request:
+#### Client Message:
 
 ```javascript
 {
@@ -272,7 +244,7 @@ Confirms the stop listening request:
 
 ## Delete data
 
-#### Request:
+#### Client Message:
 
 ```javascript
 {
@@ -299,6 +271,39 @@ Confirms the stop listening request:
       s: 'ok', // status = ok
       d: "" // seems to always be an empty string
     }
+  }
+}
+```
+
+# Errors
+
+### Auth Revoked
+
+Usually means the auth token has expired and should be refreshed
+
+```javascript
+{
+  t: 'd',
+  d: {
+    a: 'ac', 
+    b: {
+      s: string, // status code
+      d: string // explaination
+    }
+  }
+}
+```
+
+### General Server Error
+
+Basically a 500 error. Probably doesn't occur often.
+
+```javascript
+{
+  t: 'c',
+  d: {
+    t: 'e', // e for error
+    d: string // I assume it's a string, it's not clear from the client library
   }
 }
 ```
