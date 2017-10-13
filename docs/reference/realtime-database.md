@@ -93,7 +93,6 @@ This will overwrite existing data, even sibling keys that are not specified in t
   t: 'd'
   d: {
     r: number, // Same request number
-    a: 'p', // action = put
     b: { // body
       s: 'ok', // status = ok
       d: "" // seems to always be an empty string
