@@ -68,7 +68,7 @@ The client info for the JS SDK looks like this: `sdk.js.4-1-3`. This info is con
 
 ## Create or Set data
 
-This will overrite existing data
+This will overwrite existing data. Equivelent to `Reference#set`.
 
 #### Client Message:
 
