@@ -68,7 +68,7 @@ The client info for the JS SDK looks like this: `sdk.js.4-1-3`. This info is con
 
 ## Create or Set data
 
-This will overwrite existing data. Equivelent to `Reference#set`.
+This will overwrite existing data, even sibling keys that are not specified in the write. Equivelent to `Reference#set`.
 
 #### Client Message:
 
@@ -131,7 +131,6 @@ Note that the actual data is sent separatly, see the Data section
   t: 'd'
   d: {
     r: number, // Same request number
-    a: 'p', // action = put
     b: { // body
       s: 'ok', // status = ok
       d: "" // seems to always be an empty string
@@ -221,7 +220,7 @@ Merge:
     a: 'm' // action = merge
     b: {
       p: string, // path
-      d: object
+      d: object // The keys to update
     }
   }
 }
@@ -233,7 +232,7 @@ Merge:
 {
   t: 'd'
   d: {
-    r: number, // Same stop listen request number
+    r: number, // Same request number
     b: { // body
       s: 'ok', // status = ok
       d: "" // seems to always be an empty string
