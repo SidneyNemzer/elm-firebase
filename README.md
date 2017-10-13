@@ -3,14 +3,13 @@
 Firebase client written for Elm 0.18
 
 > ### Note
-> This library is a work in progress and unstable  
-> Do not expect anything to work! Be happy when something does ;)
+> This library is a work in progress and unstable
 
 ## Installing
 
 This library will be available as an Elm Package Soon^TM
 
-TODO Instructions to install with elm-github-install
+*TODO Instructions to install with elm-github-install*
 
 ## Goals
 
