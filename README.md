@@ -15,7 +15,6 @@ TODO Instructions to install with elm-github-install
 ## Goals
 
 * Implement a fully featured Firebase client in Elm (no native code or ports)
-* Drop-in replacment for [pairshaped/elm-firebase](https://github.com/pairshaped/elm-firebase)
 
 ## Features
 
