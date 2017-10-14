@@ -1,5 +1,7 @@
 # Connecting
 
+The JavaScript client doesn't actually create the WebSocket connection until a write or read is requested locally; the operation is queued while connecting, then that message will be sent right after the "client hello".
+
 ## Endpoints
 
 The first time the client connects to the Firebase Realtime WebSocket, the URL is based on the project's URL:
@@ -21,7 +23,7 @@ wss://s-usc1c-nss-210.firebaseio.com/.ws?v=[version]&ns=[project-id]&ls=[session
 
 * `[session]` is replaced with the previous session ID, if the client has reconnected from the same browser session
 
-> Note: I'm not sure why the long-term host system is used, or what would happen if the client always used the project ID-based URL. Any explaination is welcome.
+> Note: I'm not sure why the long-term host system is used, or what would happen if the client always used the project ID-based URL. Any explanation is welcome.
 
 ## Handshake
 
@@ -59,16 +61,14 @@ Client's response:
 }
 ```
 
-The JavaScript SDK library always sends this as its first message. The client won't create the WebSocket connection until a write or read is requested locally; the operation is queued while connecting, then that message will be sent right after the "client hello".
-
-The client info for the JS SDK looks like this: `sdk.js.4-1-3`. This info is constructed by the JS SDK in [PersistentConnection.ts](https://github.com/firebase/firebase-js-sdk/blob/master/packages/database/src/core/PersistentConnection.ts#L971-L995).
+The JavaScript SDK library always sends this as its first message. The client info for the JS SDK looks like this: `sdk.js.4-1-3`. This info is constructed by the JS SDK in [PersistentConnection.ts](https://github.com/firebase/firebase-js-sdk/blob/master/packages/database/src/core/PersistentConnection.ts#L971-L995).
 
 
 # Database Interactions
 
 ## Create or Set data
 
-This will overwrite existing data, even sibling keys that are not specified in the write. Equivelent to `Reference#set`.
+This will overwrite existing data, even sibling keys that are not specified in the write. Equivalent to `Reference#set`.
 
 #### Client Message:
 
@@ -123,7 +123,7 @@ This will overwrite existing data, even sibling keys that are not specified in t
 
 #### Good Response:
 
-Note that the actual data is sent separatly, see the Data section
+Note that the actual data is sent separately, see the Data section
 
 ```javascript
 {
@@ -283,7 +283,7 @@ Usually means the auth token has expired and should be refreshed
 {
   t: 'd',
   d: {
-    a: 'ac', 
+    a: 'ac',
     b: {
       s: string, // status code
       d: string // explaination

@@ -1,6 +1,6 @@
 This file documents the Firebase Realtime WebSocket Protocol. In this file, the "client library" or "client" refers to the [firebase-js-sdk](https://github.com/firebase/firebase-js-sdk)
 
-Firebase perfers to communicate over WebSockets for a fast, realtime communication. The Realtime-database also has a [REST API](https://firebase.google.com/docs/reference/rest/database/), but it has limited functionality compared to the WebSocket protocol. 
+Firebase prefers to communicate over WebSockets for a fast, efficient server-to-client and client-to-server communication. The Realtime-database also has a [REST API](https://firebase.google.com/docs/reference/rest/database/), but it has limited functionality compared to the WebSocket protocol.
 
 Every message will be a JSON object, and all messages must have a `"t"` and `"d"` key, for 'message type' and 'data' respectively. (There's one exception: the [Keep alive](#keep-alive) message).
 
@@ -8,7 +8,7 @@ Every message will be a JSON object, and all messages must have a `"t"` and `"d"
 
 ## Keep alive
 
-Periodic message to keep the websocket connection active
+Periodic message to keep the WebSocket connection active
 
 `"0"`
 
@@ -29,7 +29,7 @@ Messages about the database, eg updates
   t: 'd', // d for database
   d: {
     r: number, // request number
-    b: ? // Specific to each response
+    b: /* Specific to each response */
   }
 }
 ```
@@ -84,10 +84,10 @@ See the handler in [PersistentConnection.ts](https://github.com/firebase/firebas
 {
   t: 'd',
   d: {
-    a: 'd', 
+    a: 'd',
     b: {
       p: string, // path
-      d: object | string | number | null(?) // any valid firebase value
+      d: object | string | number | null // any valid firebase value
     }
   }
 }
@@ -103,10 +103,10 @@ See the handler in [PersistentConnection.ts](https://github.com/firebase/firebas
 {
   t: 'd',
   d: {
-    a: 'm', 
+    a: 'm',
     b: {
       p: string, // path
-      d: object | string | number | null(?) // any valid firebase value
+      d: object | string | number | null // any valid firebase value
     }
   }
 }
@@ -120,10 +120,10 @@ Used to send partial data, when only a small amount has changed. It should be me
 {
   t: 'd',
   d: {
-    a: 'c', 
+    a: 'c',
     b: {
       p: string, // path
-      q: ? // query
+      q: /* ? */ // query
     }
   }
 }
@@ -137,10 +137,10 @@ The client treats it as a "permission_denied" error. See the handler in [Persist
 {
   t: 'd',
   d: {
-    a: 'ac', 
+    a: 'ac',
     b: {
       s: string, // status code
-      d: string // explaination
+      d: string // explanation
     }
   }
 }
@@ -154,7 +154,7 @@ Indicates that the auth token has expired. See the handler in [PersistentConnect
 {
   t: 'd',
   d: {
-    a: 'sd', 
+    a: 'sd',
     b: {
       msg: string
     }
@@ -184,7 +184,7 @@ Messages related to the connection, server, or client
 ### Handshake (first message from server)
 
 ```javascript
-{ 
+{
   t: 'c', // c for control
   d: {
     t: 'h', // h for handshake or hello
@@ -197,7 +197,7 @@ Messages related to the connection, server, or client
   }
 }
 ```
-It appears that the host (`h`) is some kind of long-term connection that the client library is instructed to use. Once the handshake is recieved, the client stores the host in localStorage to use for future connections but continues using the default database URL.
+It appears that the host (`h`) is some kind of long-term connection that the client library is instructed to use. Once the handshake is received, the client stores the host in localStorage to use for future connections but continues using the default database URL.
 
 See the handler in [Connection.ts](https://github.com/firebase/firebase-js-sdk/blob/31d0f8dce31d73b4419459548b1b9081a3d9dbed/packages/database/src/realtime/Connection.ts#L368-L389)
 
@@ -229,7 +229,7 @@ See the handler in [Connection.ts](https://github.com/firebase/firebase-js-sdk/b
 }
 ```
 
-This inidicates a websocket connection should close. The client library automatically switches to the second "host" if possible.
+This indicates a WebSocket connection should close. The client library automatically switches to the second "host" if possible.
 
 See the handler in [Connection.ts](https://github.com/firebase/firebase-js-sdk/blob/31d0f8dce31d73b4419459548b1b9081a3d9dbed/packages/database/src/realtime/Connection.ts#L336-L343)
 
@@ -275,4 +275,4 @@ See handler in [Connection.ts](https://github.com/firebase/firebase-js-sdk/blob/
 }
 ```
 
-Used by the client to know that the server is able to respond. Several PING's and PONG's will be echanged when the connection is opened so that the client knows the connection is healthy.
+Used by the client to know that the server is able to respond. Several PING's and PONG's will be exchanged when the connection is opened so that the client knows the connection is healthy.
