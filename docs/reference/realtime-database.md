@@ -16,7 +16,7 @@ The server's first message (server hello) will include a host URL, which the cli
 That URL looks like this:
 
 ```
-wwss://s-usc1c-nss-210.firebaseio.com/.ws?v=[version]&ns=[project-id]&ls=[session]
+wss://s-usc1c-nss-210.firebaseio.com/.ws?v=[version]&ns=[project-id]&ls=[session]
 ```
 
 * `[session]` is replaced with the previous session ID, if the client has reconnected from the same browser session
