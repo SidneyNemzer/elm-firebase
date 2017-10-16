@@ -36,4 +36,6 @@ decodeServerResponse =
         |: (Decode.at [ "d", "b", "s" ] Decode.string
                 |> Decode.andThen decodeStatus
            )
-        |: Decode.at [ "d", "b", "d" ] Decode.string
+        |: (Decode.at [ "d", "b", "d" ] Decode.string
+                |> Decode.withDefault ""
+           )
