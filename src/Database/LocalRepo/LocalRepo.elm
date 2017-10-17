@@ -1,4 +1,4 @@
-module Database.LocalRepo.LocalRepo exposing (LocalRepo, Value(..), Path)
+module Database.LocalRepo.LocalRepo exposing (LocalRepo, Value(..), Path, heads)
 
 import Dict exposing (Dict)
 
@@ -29,16 +29,20 @@ pathFromUri =
     String.split "/"
 
 
+getFromHead : Path -> LocalRepo -> Value
+getFromHead path repo =
+    List.head path
+        |> Maybe.andThen
+            (\segment ->
+                Dict.get segment repo
+            )
+        |> Maybe.withDefault Null
+
 get : Path -> LocalRepo -> Value
 get path repo =
     let
         value =
-            List.head path
-                |> Maybe.andThen
-                    (\segment ->
-                        Dict.get segment repo
-                    )
-                |> Maybe.withDefault Null
+            getFromHead path repo
 
         maybeRemainingPath =
             List.tail path
@@ -50,10 +54,54 @@ get path repo =
             ( _, Just _ ) ->
                 Null
 
-            ( _, _ ) ->
+            ( _, Nothing ) ->
                 value
 
 
+heads : List a -> Maybe ( List a, a )
+heads list =
+    let
+        reversed =
+            List.reverse list
 
--- set : Path -> LocalRepo -> Value -> LocalRepo
--- set path repo value =
+        maybeBoth =
+            ( List.tail reversed |> Maybe.map List.reverse
+            , List.head reversed
+            )
+    in
+        case maybeBoth of
+            ( Just a, Just b ) ->
+                Just ( a, b )
+
+            ( _, _ ) ->
+                Nothing
+
+
+
+set : Path -> LocalRepo -> Value -> LocalRepo
+set path repo value =
+    case List.head path of
+        Just segment ->
+            case Dict.get segment repo of
+                Tree tree ->
+                    case List.tail path of
+                        Just remainingPath ->
+                            set remainingPath tree value
+                        Nothing ->
+
+        Nothing ->
+            value
+    -- case heads path of
+    --     Just ([], child) ->
+    --         Dict.set child repo
+    --
+    --     Just (parent, child) ->
+    --         case getFromHead parent repo of
+    --             Tree tree ->
+    --                 -- continue down
+    --
+    --             _ ->
+    --                 -- make dict and continue down
+    --
+    --     Nothing ->
+    --         -- empty path
