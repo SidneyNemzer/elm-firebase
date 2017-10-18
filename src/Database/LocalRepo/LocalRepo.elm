@@ -1,4 +1,4 @@
-module Database.LocalRepo.LocalRepo exposing (LocalRepo, Value(..), Path, heads)
+module Database.LocalRepo.LocalRepo exposing (LocalRepo, Value(..), Path, heads, empty, set, get)
 
 import Dict exposing (Dict)
 
@@ -24,38 +24,42 @@ type alias Path =
     List String
 
 
+empty : LocalRepo
+empty =
+    Dict.empty
+
+
 pathFromUri : String -> Path
 pathFromUri =
     String.split "/"
 
 
-getFromHead : Path -> LocalRepo -> Value
-getFromHead path repo =
-    List.head path
-        |> Maybe.andThen
-            (\segment ->
-                Dict.get segment repo
-            )
-        |> Maybe.withDefault Null
-
-get : Path -> LocalRepo -> Value
+get : Path -> Value -> Value
 get path repo =
-    let
-        value =
-            getFromHead path repo
+    case repo of
+        Tree tree ->
+            case combineTuble2 ( List.head path, List.tail path ) of
+                -- Set the value in the current tree
+                Just ( segment, [] ) ->
+                    Dict.get segment tree
+                        |> Maybe.withDefault Null
 
-        maybeRemainingPath =
-            List.tail path
-    in
-        case ( value, maybeRemainingPath ) of
-            ( Tree tree, Just remainingPath ) ->
-                get remainingPath repo
+                -- Find the next segment of the current tree
+                Just ( segment, remainingPath ) ->
+                    case Dict.get segment tree of
+                        -- Update the tree and continue down
+                        Just value ->
+                            get remainingPath value
 
-            ( _, Just _ ) ->
-                Null
+                        _ ->
+                            Null
 
-            ( _, Nothing ) ->
-                value
+                -- Path is empty
+                Nothing ->
+                    Tree tree
+
+        _ ->
+            Null
 
 
 heads : List a -> Maybe ( List a, a )
@@ -77,31 +81,42 @@ heads list =
                 Nothing
 
 
+combineTuble2 : ( Maybe a, Maybe b ) -> Maybe ( a, b )
+combineTuble2 tuple =
+    case tuple of
+        ( Just a, Just b ) ->
+            Just ( a, b )
 
-set : Path -> LocalRepo -> Value -> LocalRepo
+        ( _, _ ) ->
+            Nothing
+
+
+set : Path -> LocalRepo -> Value -> Value
 set path repo value =
-    case List.head path of
-        Just segment ->
-            case Dict.get segment repo of
-                Tree tree ->
-                    case List.tail path of
-                        Just remainingPath ->
-                            set remainingPath tree value
-                        Nothing ->
+    case combineTuble2 ( List.head path, List.tail path ) of
+        -- Set the value in the current tree
+        Just ( segment, [] ) ->
+            Tree <| Dict.insert segment value repo
 
+        -- Find the next segment of the current tree
+        Just ( segment, remainingPath ) ->
+            case Dict.get segment repo of
+                -- Update the tree and continue down
+                Just (Tree tree) ->
+                    Tree <|
+                        Dict.insert
+                            segment
+                            (set remainingPath tree value)
+                            repo
+
+                -- Value isn't a tree, overwrite and continue down
+                _ ->
+                    Tree <|
+                        Dict.insert
+                            segment
+                            (set remainingPath Dict.empty value)
+                            repo
+
+        -- Path is empty
         Nothing ->
             value
-    -- case heads path of
-    --     Just ([], child) ->
-    --         Dict.set child repo
-    --
-    --     Just (parent, child) ->
-    --         case getFromHead parent repo of
-    --             Tree tree ->
-    --                 -- continue down
-    --
-    --             _ ->
-    --                 -- make dict and continue down
-    --
-    --     Nothing ->
-    --         -- empty path
